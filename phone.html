@@ -132,7 +132,6 @@
       <div class="key">*</div><div class="key">0</div><div class="key">#</div>
     </div>
 
-    <!-- Home button -->
     <div class="button" style="margin-top:10px;" onclick="goHome()">🏠 Home</div>
   </div>
 
@@ -204,8 +203,15 @@
 
     function checkWired() {
       const pass = document.getElementById("wiredPass").value.trim();
-      if (pass === "Taro") {
-        window.location.href = "wired.html";
+      if (pass.toLowerCase() === "taro") {
+        // Redirect to wired.html after short delay for smoother transition
+        screen.innerHTML = `
+          <h4>Connecting...</h4>
+          <p>Establishing link to the Wired...</p>
+        `;
+        setTimeout(() => {
+          window.location.href = "wired.html";
+        }, 1500);
       } else {
         alert("Incorrect password. Try again.");
       }
