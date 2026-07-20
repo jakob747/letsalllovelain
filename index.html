@@ -14,7 +14,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      transform: perspective(800px) scale(1.02) rotateX(2deg); /* CRT curvature */
+      transform: perspective(800px) scale(1.02) rotateX(2deg);
     }
 
     canvas {
@@ -49,7 +49,7 @@
       padding: 20px;
       text-align: center;
       z-index: 1;
-      filter: drop-shadow(0 0 5px limegreen) drop-shadow(0 0 10px limegreen); /* glow */
+      filter: drop-shadow(0 0 5px limegreen) drop-shadow(0 0 10px limegreen);
     }
 
     .lain {
@@ -118,6 +118,26 @@
       100% { text-shadow: 0 0 5px limegreen; }
     }
 
+    .continue-btn {
+      display: none;
+      margin-top: 20px;
+      background: black;
+      border: 2px solid limegreen;
+      color: limegreen;
+      padding: 10px 20px;
+      font-family: monospace;
+      cursor: pointer;
+      box-shadow: 0 0 10px limegreen;
+      animation: glowBtn 2s infinite alternate;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+
+    @keyframes glowBtn {
+      from { box-shadow: 0 0 5px limegreen; }
+      to { box-shadow: 0 0 20px limegreen; }
+    }
+
     .easter-egg {
       position: fixed;
       top: 50%;
@@ -153,10 +173,11 @@
     </iframe>
   </div>
 
+  <button class="continue-btn" id="continueBtn" onclick="window.location.href='layer1.html'">Let's Continue...</button>
+
   <div class="scanlines"></div>
 
   <script>
-    // Password check
     function checkPassword() {
       const input = document.getElementById('password').value;
       const correctPassword = "protocol7";
@@ -166,13 +187,19 @@
         setTimeout(() => {
           document.getElementById('access-granted').style.display = 'none';
           document.getElementById('video').style.display = 'block';
+          // Show "Let's Continue..." button after 30 seconds of video playback
+          setTimeout(() => {
+            const btn = document.getElementById('continueBtn');
+            btn.style.display = 'block';
+            setTimeout(() => btn.style.opacity = 1, 100); // fade-in effect
+          }, 30000);
         }, 2000);
       } else {
         alert("Incorrect password. Try again.");
       }
     }
 
-    // Matrix ASCII Rain with custom phrase
+    // Matrix ASCII Rain
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
     canvas.height = window.innerHeight;
