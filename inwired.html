@@ -147,6 +147,7 @@
         <div class="button" onclick="openEmails()">📧 Emails</div>
         <div class="button" onclick="openFiles()">📂 Files</div>
         <div class="button" onclick="openTerminal()">💻 Terminal</div>
+        <div class="button" onclick="openMissions()">🎯 Missions</div>
         <div class="button" onclick="goHome()">🏠 Home</div>
       </div>
       <div class="window" id="window">
@@ -161,7 +162,7 @@
   </div>
 
   <script>
-    // Command input
+    // CONNECT command
     document.getElementById("command").addEventListener("keydown", function(e) {
       if (e.key === "Enter") {
         if (this.value.trim().toUpperCase() === "CONNECT") {
@@ -178,10 +179,14 @@
     });
 
     const win = document.getElementById("window");
+    let failedAttempts = 0;
 
     function openEmails() {
       win.innerHTML = `
         <h3>Email Inbox</h3>
+        <p>From: GOD<br>Subject: Welcome to the Wired<br>
+        Message: You have entered the domain beyond flesh and time. 
+        Your journey begins now...</p>
         <p>From: Chisa Yomoda<br>Subject: I'm still here...</p>
         <div class="button" onclick="goHome()">⬅ Back</div>
       `;
@@ -190,9 +195,37 @@
     function openFiles() {
       win.innerHTML = `
         <h3>Files</h3>
-        <p>- protocol7.txt<br>- wired_access.log<br>- lain_diary.doc</p>
+        <p>- protocol7.txt (requires password)<br>- wired_access.log<br>- lain_diary.doc</p>
+        <input type="text" id="filePassword" placeholder="Enter password for protocol7.txt">
+        <div class="button" onclick="checkProtocol()">Unlock</div>
         <div class="button" onclick="goHome()">⬅ Back</div>
       `;
+    }
+
+    function checkProtocol() {
+      const input = document.getElementById("filePassword").value.trim().toLowerCase();
+      if (input === "queenofhearts") {
+        win.innerHTML = `
+          <h3>protocol7.txt</h3>
+          <p>ACCESS GRANTED<br>Username: seeker_of_truth</p>
+          <div class="button" onclick="goHome()">⬅ Back</div>
+        `;
+      } else {
+        failedAttempts++;
+        if (failedAttempts >= 3) {
+          win.innerHTML = `
+            <h3>Email Inbox</h3>
+            <p>From: GOD<br>Subject: The Answer Awaits<br>
+            Message: you'll get all your answers chisayomoda33 here. .
+        .<br><br>
+            Hint: chisayomoda33</p>
+            <div class="button" onclick="goHome()">⬅ Back</div>
+          `;
+          failedAttempts = 0; // reset counter
+        } else {
+          alert("Incorrect password. Try again.");
+        }
+      }
     }
 
     function openTerminal() {
@@ -200,6 +233,16 @@
         <h3>Terminal</h3>
         <p>Type CONNECT to proceed:</p>
         <input type="text" id="innerCommand" placeholder="Enter command...">
+        <div class="button" onclick="goHome()">⬅ Back</div>
+      `;
+    }
+
+    function openMissions() {
+      win.innerHTML = `
+        <h3>Mission Control</h3>
+        <p>- Mission 1: Decode protocol7.txt<br>
+        - Mission 2: Trace wired_access.log<br>
+        - Mission 3: Unlock diary fragments</p>
         <div class="button" onclick="goHome()">⬅ Back</div>
       `;
     }
