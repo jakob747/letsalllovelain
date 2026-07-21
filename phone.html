@@ -103,6 +103,14 @@
       border: none;
     }
 
+    img {
+      max-width: 100%;
+      border: 2px solid #00ffcc;
+      border-radius: 5px;
+      box-shadow: 0 0 10px #00ffcc;
+      margin-top: 10px;
+    }
+
     input {
       background: black;
       border: 1px solid #00ffcc;
@@ -187,14 +195,33 @@
     function openPhotos() {
       screen.innerHTML = `
         <h4>Photos</h4>
-        <p>(Photo gallery placeholder)</p>
+        <div class="button" onclick="showImg1()">🖼 Image 1</div>
+        <div class="button" onclick="showImg2()">🖼 Image 2</div>
+        <p style="margin-top:10px; font-size:0.9rem; color:#00ffcc;">Hint: One of these holds the Wired key...</p>
         <div class="button" onclick="goHome()">⬅ Back</div>
+      `;
+    }
+
+    function showImg1() {
+      screen.innerHTML = `
+        <h4>Image 1</h4>
+        <img src="https://iili.io/CwpXhzB.jpg" alt="Image 1">
+        <div class="button" onclick="openPhotos()">⬅ Back</div>
+      `;
+    }
+
+    function showImg2() {
+      screen.innerHTML = `
+        <h4>Image 2</h4>
+        <img src="https://iili.io/CwpXjWP.jpg" alt="Image 2">
+        <div class="button" onclick="openPhotos()">⬅ Back</div>
       `;
     }
 
     function openWired() {
       screen.innerHTML = `
         <h4>Connect to Wired</h4>
+        <p style="font-size:0.9rem; color:#00ffcc;">Password hint: Check the Photos tab...</p>
         <input type="password" id="wiredPass" placeholder="Enter password">
         <div class="button" onclick="checkWired()">Submit</div>
         <div class="button" onclick="goHome()">⬅ Back</div>
@@ -204,18 +231,15 @@
     function checkWired() {
       const pass = document.getElementById("wiredPass").value.trim();
       if (pass.toLowerCase() === "taro") {
-        // Redirect to wired.html after short delay for smoother transition
         screen.innerHTML = `
           <h4>Connecting...</h4>
           <p>Establishing link to the Wired...</p>
         `;
         setTimeout(() => {
-          window.location.href = "wired.html";
+          window.location.href = "layer2.html";
         }, 1500);
       } else {
         alert("Incorrect password. Try again.");
       }
     }
-  </script>
-</body>
-</html>
+  </script
