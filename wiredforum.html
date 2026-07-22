@@ -37,13 +37,7 @@
       justify-content: space-between;
     }
 
-    h2 {
-      margin: 0;
-      text-align: center;
-      color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc;
-      font-size: 1rem;
-    }
+    h2 { text-align: center; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
 
     .window {
       flex: 1;
@@ -96,10 +90,11 @@
         <p id="welcome">Welcome to the Wired Forum...</p>
       </div>
       <div class="popup" id="authPopup">
-        <h3>Sign In / Sign Up</h3>
+        <h3>Authentication</h3>
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
-        <div class="button" onclick="signIn()">Enter</div>
+        <div class="button" onclick="signIn()">Sign In</div>
+        <div class="button" onclick="signUp()">Sign Up</div>
       </div>
       <div class="button" onclick="goBack()">⬅ Back</div>
     </div>
@@ -107,7 +102,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
     import { firebaseConfig } from "./config.js";
 
     const app = initializeApp(firebaseConfig);
@@ -121,24 +116,39 @@
     setTimeout(() => {
       welcome.style.display = "none";
       authPopup.style.display = "block";
+      loadMessages(false); // show old messages to everyone
     }, 2000);
 
     let currentUser = null;
+
+    async function signUp() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      if(user && pass) {
+        await addDoc(collection(db, "users"), { user, pass });
+        alert("Account created. Please sign in.");
+      } else {
+        alert("Enter username and password.");
+      }
+    }
 
     async function signIn() {
       const user = document.getElementById("username").value.trim();
       const pass = document.getElementById("password").value.trim();
       if(user && pass) {
-        currentUser = user;
-        authPopup.style.display = "none";
-        loadMessages();
-        showMessage(user, "joined the forum.", "user1");
-      } else {
-        alert("Enter credentials.");
+        const q = query(collection(db, "users"), where("user","==",user), where("pass","==",pass));
+        const snapshot = await getDocs(q);
+        if(!snapshot.empty) {
+          currentUser = user;
+          authPopup.style.display = "none";
+          loadMessages(true);
+        } else {
+          alert("Invalid credentials.");
+        }
       }
     }
 
-    async function loadMessages() {
+    async function loadMessages(loggedIn) {
       const querySnapshot = await getDocs(collection(db, "forumPosts"));
       windowDiv.innerHTML = "";
       querySnapshot.forEach((doc) => {
@@ -146,11 +156,14 @@
         const colorClass = assignColor(data.user);
         windowDiv.innerHTML += `<div class="message ${colorClass}"><strong>@${data.user}:</strong> ${data.text}</div>`;
       });
-      // Add input for posting
-      windowDiv.innerHTML += `
-        <input type="text" id="newMsg" placeholder="Type a message...">
-        <div class="button" onclick="postMessage()">Post</div>
-      `;
+      if(loggedIn) {
+        windowDiv.innerHTML += `
+          <input type="text" id="newMsg" placeholder="Type a message...">
+          <div class="button" onclick="postMessage()">Post</div>
+        `;
+      } else {
+        windowDiv.innerHTML += `<p style="color:#ff0044;">Log in or sign up to post.</p>`;
+      }
     }
 
     async function postMessage() {
@@ -158,12 +171,8 @@
       if(text && currentUser) {
         await addDoc(collection(db, "forumPosts"), { user: currentUser, text });
         document.getElementById("newMsg").value = "";
-        loadMessages();
+        loadMessages(true);
       }
-    }
-
-    function showMessage(user, text, colorClass) {
-      windowDiv.innerHTML += `<div class="message ${colorClass}"><strong>@${user}:</strong> ${text}</div>`;
     }
 
     function assignColor(user) {
@@ -180,10 +189,9 @@
       return hash;
     }
 
-    window.goBack = function() {
-      window.location.href = "inwired.html";
-    }
+    window.goBack = function() { window.location.href = "inwired.html"; }
     window.signIn = signIn;
+    window.signUp = signUp;
     window.postMessage = postMessage;
   </script>
 </body>
