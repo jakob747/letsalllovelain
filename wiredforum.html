@@ -59,8 +59,14 @@
       margin: 0;
       text-align: center;
       color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc;
+      text-shadow: 0 0 15px #00ffcc, 0 0 30px violet;
       font-size: 1rem;
+      animation: flicker 2s infinite alternate;
+    }
+
+    @keyframes flicker {
+      from { opacity: 1; }
+      to { opacity: 0.8; }
     }
 
     .window {
@@ -105,8 +111,15 @@
       color: #00ffcc;
       margin-top: 10px;
       text-shadow: 0 0 5px #00ffcc;
+      animation: pulse 1.5s infinite;
     }
     .button:hover { background: rgba(0,255,204,0.2); }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 5px #00ffcc; }
+      50% { box-shadow: 0 0 15px violet; }
+      100% { box-shadow: 0 0 5px #00ffcc; }
+    }
   </style>
 </head>
 <body>
@@ -211,9 +224,8 @@
     function assignColor(user) {
       const colors = ["user1","user2","user3","user4"];
       const index = Math.abs(hashCode(user)) % colors.length;
-      return colors[index];
     }
-
+    
     function hashCode(str) {
       let hash = 0;
       for (let i = 0; i < str.length; i++) {
@@ -222,7 +234,12 @@
       return hash;
     }
 
-    window.goBack = function() { window.location.href = "inwired.html"; }
+    // Back button
+    window.goBack = function() { 
+      window.location.href = "inwired.html"; 
+    };
+
+    // Expose functions globally
     window.signIn = signIn;
     window.signUp = signUp;
     window.postMessage = postMessage;
