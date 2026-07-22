@@ -148,6 +148,7 @@
         <div class="button" onclick="openFiles()">📂 Files</div>
         <div class="button" onclick="openTerminal()">💻 Terminal</div>
         <div class="button" onclick="openMissions()">🎯 Missions</div>
+        <div class="button" onclick="openForum()">💬 Forum</div>
         <div class="button" onclick="goHome()">🏠 Home</div>
       </div>
       <div class="window" id="window">
@@ -246,7 +247,6 @@
         <div class="button" onclick="goHome()">⬅ Back</div>
       `;
     }
-
     function goHome() {
       win.innerHTML = `
         <iframe id="wiredVideo"
@@ -256,6 +256,12 @@
         </iframe>
       `;
     }
+
+    // NEW: Forum redirect
+    function openForum() {
+      window.location.href = "wiredforum.html";
+    }
   </script>
 </body>
 </html>
+
