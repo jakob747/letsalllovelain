@@ -130,15 +130,7 @@
   </style>
 </head>
 <body>
-  <!-- Terminal First -->
-  <div class="terminal" id="terminal">
-    <p>> Type CONNECT to proceed:</p>
-    <input type="text" id="command" placeholder="Enter command...">
-  </div>
-
-  <!-- Glitch Transition -->
-  <div class="glitch" id="glitch">Present day, present time.</div>
-
+ 
   <!-- Monitor + Screen -->
   <div class="monitor" id="monitor">
     <div class="screen" id="screen">
@@ -229,13 +221,78 @@
       }
     }
 
+    // Functional Terminal
     function openTerminal() {
       win.innerHTML = `
         <h3>Terminal</h3>
-        <p>Type CONNECT to proceed:</p>
-        <input type="text" id="innerCommand" placeholder="Enter command...">
-        <div class="button" onclick="goHome()">⬅ Back</div>
+        <div id="terminalWindow" style="background:black; color:limegreen; font-family:monospace; padding:10px; height:200px; overflow-y:auto; border:1px solid #00ffcc;">
+          <div>> Welcome to Wired Terminal (type 'help' for commands)</div>
+        </div>
+        <input type="text" id="innerCommand" placeholder="Enter command..." style="width:100%; background:black; color:limegreen; border:1px solid #00ffcc; font-family:monospace;">
+        <div class="button" onclick="goHome()">⬅ Back
+                <div class="button" onclick="goHome()">⬅ Back</div>
       `;
+      const terminalWindow = document.getElementById("terminalWindow");
+      const input = document.getElementById("innerCommand");
+
+      input.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+          const cmd = this.value.trim();
+          this.value = "";
+          runCommand(cmd, terminalWindow);
+        }
+      });
+    }
+
+    function runCommand(cmd, terminalWindow) {
+      let output = "";
+      switch(cmd) {
+        case "help":
+          output = "Available commands: ls, pwd, echo, cat, clear, whoami, date, exit";
+          break;
+        case "ls":
+          output = "protocol7.txt  wired_access.log  lain_diary.doc";
+          break;
+        case "pwd":
+          output = "/home/wired";
+          break;
+        case "whoami":
+          output = "wired_user";
+          break;
+        case "date":
+       output = new Date().toUTCString();
+  break;
+
+        case "echo":
+          output = "Usage: echo [text]";
+          break;
+        case "clear":
+          terminalWindow.innerHTML = "";
+          return;
+        case "exit":
+          output = "Exiting terminal...";
+          setTimeout(() => goHome(), 1000);
+          break;
+        default:
+          if (cmd.startsWith("echo ")) {
+            output = cmd.slice(5);
+          } else if (cmd.startsWith("cat ")) {
+            const file = cmd.slice(4);
+            if (file === "protocol7.txt") {
+              output = "ACCESS DENIED (password required)";
+            } else if (file === "wired_access.log") {
+              output = "Log entry: Connection established...\nLog entry: User authenticated...";
+            } else if (file === "lain_diary.doc") {
+              output = "Diary fragment: 'I feel the Wired is more real than the flesh...'";
+            } else {
+              output = `cat: ${file}: No such file`;
+            }
+          } else {
+            output = `Unknown command: ${cmd}`;
+          }
+      }
+      terminalWindow.innerHTML += `<div>> ${cmd}</div><div>${output}</div>`;
+      terminalWindow.scrollTop = terminalWindow.scrollHeight;
     }
 
     function openMissions() {
@@ -247,6 +304,7 @@
         <div class="button" onclick="goHome()">⬅ Back</div>
       `;
     }
+
     function goHome() {
       win.innerHTML = `
         <iframe id="wiredVideo"
@@ -257,11 +315,10 @@
       `;
     }
 
-    // NEW: Forum redirect
+    // Forum redirect
     function openForum() {
       window.location.href = "wiredforum.html";
     }
   </script>
 </body>
 </html>
-
