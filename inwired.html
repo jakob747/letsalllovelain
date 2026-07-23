@@ -17,46 +17,12 @@
       flex-direction: column;
     }
 
-    .terminal {
-      text-align: left;
-      width: 80%;
-      max-width: 600px;
-      font-size: 14px;
-    }
-    input {
-      width: 100%;
-      background: black;
-      border: 1px solid limegreen;
-      color: limegreen;
-      padding: 8px;
-      font-family: monospace;
-    }
-
-    .glitch {
-      display: none;
-      font-size: 2rem;
-      text-align: center;
-      color: #ff0044;
-      animation: glitch 0.3s infinite;
-      margin-top: 20px;
-    }
-    @keyframes glitch {
-      0% { text-shadow: 2px 2px red; }
-      25% { text-shadow: -2px -2px blue; }
-      50% { text-shadow: 2px -2px limegreen; }
-      75% { text-shadow: -2px 2px magenta; }
-      100% { text-shadow: 0 0 10px #ff0044; }
-    }
-
     .monitor {
       display: none;
       background: #222;
       padding: 25px;
       border-radius: 20px;
-      box-shadow:
-        inset 0 0 40px #000,
-        0 0 40px #00ffcc,
-        15px 20px 50px #000;
+      box-shadow: inset 0 0 40px #000, 0 0 40px #00ffcc, 15px 20px 50px #000;
       display: inline-block;
       position: relative;
     }
@@ -130,7 +96,6 @@
   </style>
 </head>
 <body>
- 
   <!-- Monitor + Screen -->
   <div class="monitor" id="monitor">
     <div class="screen" id="screen">
@@ -155,22 +120,6 @@
   </div>
 
   <script>
-    // CONNECT command
-    document.getElementById("command").addEventListener("keydown", function(e) {
-      if (e.key === "Enter") {
-        if (this.value.trim().toUpperCase() === "CONNECT") {
-          document.getElementById("terminal").style.display = "none";
-          document.getElementById("glitch").style.display = "block";
-          setTimeout(() => {
-            document.getElementById("glitch").style.display = "none";
-            document.getElementById("monitor").style.display = "inline-block";
-          }, 3000);
-        } else {
-          alert("Unknown command. Try CONNECT.");
-        }
-      }
-    });
-
     const win = document.getElementById("window");
     let failedAttempts = 0;
 
@@ -209,19 +158,18 @@
           win.innerHTML = `
             <h3>Email Inbox</h3>
             <p>From: GOD<br>Subject: The Answer Awaits<br>
-            Message: you'll get all your answers chisayomoda33 here. .
-        .<br><br>
+            Message: you'll get all your answers chisayomoda33 here...<br><br>
             Hint: chisayomoda33</p>
             <div class="button" onclick="goHome()">⬅ Back</div>
           `;
-          failedAttempts = 0; // reset counter
+          failedAttempts = 0;
         } else {
           alert("Incorrect password. Try again.");
         }
       }
     }
 
-    // Functional Terminal
+    // Fixed Terminal
     function openTerminal() {
       win.innerHTML = `
         <h3>Terminal</h3>
@@ -229,8 +177,7 @@
           <div>> Welcome to Wired Terminal (type 'help' for commands)</div>
         </div>
         <input type="text" id="innerCommand" placeholder="Enter command..." style="width:100%; background:black; color:limegreen; border:1px solid #00ffcc; font-family:monospace;">
-        <div class="button" onclick="goHome()">⬅ Back
-                <div class="button" onclick="goHome()">⬅ Back</div>
+        <div class="button" onclick="goHome()">⬅ Back</div>
       `;
       const terminalWindow = document.getElementById("terminalWindow");
       const input = document.getElementById("innerCommand");
@@ -260,9 +207,8 @@
           output = "wired_user";
           break;
         case "date":
-       output = new Date().toUTCString();
-  break;
-
+          output = new Date().toUTCString(); // safe UTC time
+          break;
         case "echo":
           output = "Usage: echo [text]";
           break;
@@ -291,7 +237,7 @@
             output = `Unknown command: ${cmd}`;
           }
       }
-      terminalWindow.innerHTML += `<div>> ${cmd}</div><div>${output}</div>`;
+       terminalWindow.innerHTML += `<div>> ${cmd}</div><div>${output}</div>`;
       terminalWindow.scrollTop = terminalWindow.scrollHeight;
     }
 
